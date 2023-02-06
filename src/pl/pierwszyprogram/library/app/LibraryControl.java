@@ -5,9 +5,9 @@ import pl.pierwszyprogram.library.model.Book;
 import pl.pierwszyprogram.library.model.Library;
 
 public class LibraryControl {
-    private int exit = 0;
-    private int addBook = 1;
-    private int showInfo = 2;
+    private final int exit = 0;
+    private final int addBook = 1;
+    private final int printBooks = 2;
     private DataReader dataReader = new DataReader();
     private Library library = new Library();
 
@@ -18,11 +18,22 @@ public class LibraryControl {
             printOption();
             option = dataReader.getInt();
             switch (option) {
-                case  -> option = 0;
-                case 1 ->  addBook();
+                case addBook ->  addBook();
+                case printBooks -> printBooks();
+                case exit -> exit();
                 default -> System.out.println("błędny wybór");
             }
-        } while (option == 0);
+        } while (option != exit);
+    }
+
+    public void exit() {
+        System.out.println("Koniec programu");
+        dataReader.close();
+
+    }
+
+    private void printBooks() {
+        library.printBooks();
     }
 
     private void addBook() {
@@ -34,6 +45,6 @@ public class LibraryControl {
         System.out.println("Wybierz opcję\n"
                 + exit +  " - wyjście z programu\n"
                 + addBook + " - dodanie nowej książki\n"
-                + showInfo + " - wyświetl dostępne książki");
+                + printBooks + " - wyświetl dostępne książki");
     }
 }
