@@ -7,6 +7,9 @@ public class Library {
     private Book[] books = new Book[MAX_BOOKS];
     private Magazine[] magazines = new Magazine[MAX_MAGAZINE];
 
+
+
+
     private int booksNumber = 0;
     private int magazinesNumber = 0;
 
