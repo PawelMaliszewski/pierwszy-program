@@ -16,7 +16,6 @@ public class LibraryControl {
 
     public void cotrolLoop() {
         int option;
-
         do {
             printOption();
             option = dataReader.getInt();
