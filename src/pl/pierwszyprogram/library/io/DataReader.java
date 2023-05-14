@@ -6,36 +6,41 @@ import java.util.Scanner;
 
 public class DataReader {
     private Scanner sc = new Scanner(System.in);
+    private ConsolePrinter printer;
+
+    public DataReader(ConsolePrinter printer) {
+        this.printer = printer;
+    }
 
     public Book readAndCreate() {
         System.out.println("Tytuł: ");
         String title = sc.nextLine();
-        System.out.println("Autor: ");
+        printer.printLine("Autor: ");
         String author = sc.nextLine();
-        System.out.println("Data wydania: ");
+        printer.printLine("Data wydania: ");
         int releaseDate = sc.nextInt();
-        System.out.println("Stron: ");
+        printer.printLine("Stron: ");
         int pages = sc.nextInt();
         sc.nextLine();
-        System.out.println("Wydawca: ");
+        printer.printLine("Wydawca: ");
         String publisher = sc.nextLine();
-        System.out.println("ISBN: ");
+        printer.printLine("ISBN: ");
         String isbn = sc.nextLine();
         return new Book(title, author, releaseDate, pages, publisher, isbn);
     }
 
     public Magazine readAndCreateMagazine() {
-        System.out.println("Tytuł: ");
+        printer.printLine("Tytuł: ");
         String title = sc.nextLine();
-        System.out.println("Wydawca: ");
+        printer.printLine("Wydawca: ");
         String publisher = sc.nextLine();
-        System.out.println("Język: ");
+        printer.printLine("Język: ");
         String language = sc.nextLine();
-        System.out.println("Rok: ");
+        printer.printLine("Rok: ");
         int year = sc.nextInt();
-        System.out.println("Miesiąc:");
+        printer.printLine("Miesiąc:");
         int month = sc.nextInt();
-        System.out.println("Dzień:");
+        printer.printLine("Dzień:");
         int day = sc.nextInt();
         return new Magazine(title, publisher, language, year, month, day);
     }
@@ -45,8 +50,11 @@ public class DataReader {
     }
 
     public int getInt() {
-        int number = sc.nextInt();
-        sc.nextLine();
-        return number;
+        try {
+            return sc.nextInt();
+        } finally {
+            sc.nextLine();
+        }
+
     }
 }
