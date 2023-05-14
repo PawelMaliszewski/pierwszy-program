@@ -1,7 +1,7 @@
 package pl.pierwszyprogram.library.app;
 
 public class LibraryApp {
-    private static final String APP_NAME = "Biblioteka v1.6";
+    private static final String APP_NAME = "Biblioteka v1.8";
 
     public static void main(String[] args) {
 
@@ -9,7 +9,7 @@ public class LibraryApp {
 
         LibraryControl libraryControl = new LibraryControl();
 
-        libraryControl.cotrolLoop();
+        libraryControl.controlLoop();
     }
 
 }

@@ -55,6 +55,9 @@ public class DataReader {
         } finally {
             sc.nextLine();
         }
+    }
 
+    public String getString() {
+        return sc.nextLine();
     }
 }

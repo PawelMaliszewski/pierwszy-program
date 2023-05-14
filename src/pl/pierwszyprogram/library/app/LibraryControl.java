@@ -1,21 +1,41 @@
 package pl.pierwszyprogram.library.app;
 
+import pl.pierwszyprogram.library.exception.DataExportException;
+import pl.pierwszyprogram.library.exception.DataImportException;
 import pl.pierwszyprogram.library.exception.NoSuchOptionException;
 import pl.pierwszyprogram.library.io.ConsolePrinter;
 import pl.pierwszyprogram.library.io.DataReader;
+import pl.pierwszyprogram.library.io.file.FileManager;
+import pl.pierwszyprogram.library.io.file.FileManagerBuilder;
 import pl.pierwszyprogram.library.model.Book;
 import pl.pierwszyprogram.library.model.Library;
 import pl.pierwszyprogram.library.model.Magazine;
 import pl.pierwszyprogram.library.model.Publication;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 
 public class LibraryControl {
     private ConsolePrinter printer = new ConsolePrinter();
     private DataReader dataReader = new DataReader(printer);
-    private Library library = new Library();
+    private FileManager fileManager;
+    private Library library;
 
-    public void cotrolLoop() {
+    LibraryControl() {
+        fileManager = new FileManagerBuilder(printer, dataReader). build();
+        try {
+            library  = fileManager.importData();
+            printer.printLine("Zaimportowano dane z pliku");
+        } catch (DataImportException e) {
+            printer.printLine(e.getMessage());
+            library = new Library();
+            printer.printLine("Zainicjowano nowa bazę danych");
+        } catch (IOException e) {
+            printer.printLine(e.getMessage());
+        }
+    }
+
+    void controlLoop() {
         Option option;
         do {
             printOption();
@@ -48,9 +68,14 @@ public class LibraryControl {
     }
 
     public void exit() {
+        try {
+            fileManager.exportData(library);
+            printer.printLine("Export danych do pliku zakończony sukcesem");
+        } catch (IOException e) {
+            throw new DataImportException("nie udało się eksportować danych do pliku");
+        }
         printer.printLine("Koniec programu");
         dataReader.close();
-
     }
 
     private void printBooks() {
