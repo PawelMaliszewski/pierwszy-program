@@ -12,15 +12,7 @@ public class Library implements Serializable {
         return Arrays.copyOfRange(publications, 0, publicationNumber);
     }
 
-    public void addBook(Book book) {
-        addPublication(book);
-    }
-
-    public void addMagazine(Magazine magazine) {
-        addPublication(magazine);
-    }
-
-    private void addPublication(Publication publication) {
+    public void addPublication(Publication publication) {
         if (publicationNumber >= MAX_PUBLICATIONS) {
             throw new ArrayIndexOutOfBoundsException("Max publication" + MAX_PUBLICATIONS);
         }
