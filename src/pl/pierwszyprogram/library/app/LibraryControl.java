@@ -22,9 +22,9 @@ public class LibraryControl {
     private Library library;
 
     LibraryControl() {
-        fileManager = new FileManagerBuilder(printer, dataReader). build();
+        fileManager = new FileManagerBuilder(printer, dataReader).build();
         try {
-            library  = fileManager.importData();
+            library = fileManager.importData();
             printer.printLine("Zaimportowano dane z pliku");
         } catch (DataImportException | InvalidDataException e) {
             printer.printLine(e.getMessage());
@@ -45,6 +45,8 @@ public class LibraryControl {
                 case PRINT_BOOKS -> printBooks();
                 case ADD_MAGAZINE -> addMagazine();
                 case PRINT_MAGAZINES -> printMagazine();
+                case DELETE_BOOK -> deleteBook();
+                case DELETE_MAGAZINE -> deleteMagazine();
                 case EXIT -> exit();
                 default -> printer.printLine("błędny wybór");
             }
@@ -76,6 +78,32 @@ public class LibraryControl {
         }
         printer.printLine("Koniec programu");
         dataReader.close();
+    }
+
+    private void deleteMagazine() {
+        try {
+            Magazine magazine = dataReader.readAndCreateMagazine();
+            if (library.removePublication(magazine)) {
+                printer.printLine("magazyn usunięty");
+            } else {
+                printer.printLine("Nie odnaleziono magazynu");
+            }
+        } catch (InputMismatchException e) {
+            printer.printLine("niepoprawne dane");
+        }
+    }
+
+    private void deleteBook() {
+        try {
+            Book book = dataReader.readAndCreate();
+            if (library.removePublication(book)) {
+                printer.printLine("książka usunięta");
+            } else {
+                printer.printLine("Nie odnaleziono książki");
+            }
+        } catch (InputMismatchException e) {
+            printer.printLine("niepoprawne dane");
+        }
     }
 
     private void printBooks() {
@@ -122,9 +150,11 @@ public class LibraryControl {
         ADD_BOOK(1, " - dodanie nowej książki"),
         PRINT_BOOKS(2, " - wyświetl dostępne książki"),
         ADD_MAGAZINE(3, " - dodanie nowego magazynu"),
-        PRINT_MAGAZINES(4, " - wyświetl dostępne magazyny");
+        PRINT_MAGAZINES(4, " - wyświetl dostępne magazyny"),
+        DELETE_BOOK(5, "Usuń książkę"),
+        DELETE_MAGAZINE(6, "Usuń magazyn");
 
-        private final  int option;
+        private final int option;
         private final String description;
 
         Option(int option, String description) {

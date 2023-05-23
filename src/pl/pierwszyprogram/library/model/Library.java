@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class Library implements Serializable {
-    private static final int MAX_PUBLICATIONS = 2000;
-    private final Publication[] publications = new Publication[2000];
+    private static final int INITIAL_CAPACITY = 1;
+    private Publication[] publications = new Publication[INITIAL_CAPACITY];
     private int publicationNumber = 0;
 
     public Publication[] getPublications() {
@@ -13,10 +13,30 @@ public class Library implements Serializable {
     }
 
     public void addPublication(Publication publication) {
-        if (publicationNumber >= MAX_PUBLICATIONS) {
-            throw new ArrayIndexOutOfBoundsException("Max publication" + MAX_PUBLICATIONS);
+        if (publicationNumber == publications.length) {
+            publications = Arrays.copyOf(publications, publications.length * 2);
         }
         publications[publicationNumber] = publication;
         publicationNumber++;
     }
+
+    public boolean removePublication(Publication pub) {
+        final int notFound = -1;
+        int found = notFound;
+        int i = 0;
+        while (i < publicationNumber && found == notFound) {
+            if (pub.equals(publications[i])) {
+                found = i;
+            } else  {
+                i++;
+            }
+        }
+        if (found != notFound) {
+            System.arraycopy(publications, found + 1, publications, found, publications.length - notFound - 1);
+            publicationNumber--;
+            publications[publicationNumber] = null;
+        }
+        return found != notFound;
+    }
+
 }
