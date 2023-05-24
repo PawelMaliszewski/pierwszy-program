@@ -1,42 +1,46 @@
 package pl.pierwszyprogram.library.model;
 
+import pl.pierwszyprogram.library.exception.PublicationAlreadyExistsException;
+import pl.pierwszyprogram.library.exception.UserAlreadyExistsException;
+
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Library implements Serializable {
-    private static final int INITIAL_CAPACITY = 1;
-    private Publication[] publications = new Publication[INITIAL_CAPACITY];
-    private int publicationNumber = 0;
 
-    public Publication[] getPublications() {
-        return Arrays.copyOfRange(publications, 0, publicationNumber);
+    private Map<String, Publication> publications = new HashMap<>();
+    private Map<String, LibraryUser> users = new HashMap<>();
+
+    public Map<String, Publication> getPublications() {
+        return publications;
+    }
+
+    public Map<String, LibraryUser> getUsers() {
+        return users;
     }
 
     public void addPublication(Publication publication) {
-        if (publicationNumber == publications.length) {
-            publications = Arrays.copyOf(publications, publications.length * 2);
+        if (publications.containsKey(publication.getTitle())) {
+            throw new PublicationAlreadyExistsException("Publikacja o takim tytule juz istnieje");
         }
-        publications[publicationNumber] = publication;
-        publicationNumber++;
+        publications.put(publication.getTitle(), publication);
+    }
+
+    public void addUser(LibraryUser libraryUser) {
+        if (users.containsKey(libraryUser.getPesel())) {
+            throw new UserAlreadyExistsException("Użytkownik o numerze pesel: " + libraryUser.getPesel() + " jest wpisany");
+        }
+        users.put(libraryUser.getPesel(), libraryUser);
     }
 
     public boolean removePublication(Publication pub) {
-        final int notFound = -1;
-        int found = notFound;
-        int i = 0;
-        while (i < publicationNumber && found == notFound) {
-            if (pub.equals(publications[i])) {
-                found = i;
-            } else  {
-                i++;
-            }
+        if (publications.containsValue(pub)) {
+            publications.remove(pub.getTitle());
+            return true;
+        } else {
+            return false;
         }
-        if (found != notFound) {
-            System.arraycopy(publications, found + 1, publications, found, publications.length - notFound - 1);
-            publicationNumber--;
-            publications[publicationNumber] = null;
-        }
-        return found != notFound;
     }
 
 }

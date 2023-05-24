@@ -1,6 +1,7 @@
 package pl.pierwszyprogram.library.io;
 
 import pl.pierwszyprogram.library.model.Book;
+import pl.pierwszyprogram.library.model.LibraryUser;
 import pl.pierwszyprogram.library.model.Magazine;
 import java.util.Scanner;
 
@@ -43,6 +44,16 @@ public class DataReader {
         printer.printLine("Dzień:");
         int day = sc.nextInt();
         return new Magazine(title, publisher, language, year, month, day);
+    }
+
+    public LibraryUser createLibraryUser() {
+        printer.printLine("Imię");
+        String firstName = sc.nextLine();
+        printer.printLine("Nazwisko");
+        String lastName = sc.nextLine();
+        printer.printLine("Pesel");
+        String pesel = sc.nextLine();
+        return new LibraryUser(firstName, lastName, pesel);
     }
 
     public void close() {

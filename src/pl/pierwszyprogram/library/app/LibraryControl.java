@@ -3,14 +3,12 @@ package pl.pierwszyprogram.library.app;
 import pl.pierwszyprogram.library.exception.DataImportException;
 import pl.pierwszyprogram.library.exception.InvalidDataException;
 import pl.pierwszyprogram.library.exception.NoSuchOptionException;
+import pl.pierwszyprogram.library.exception.UserAlreadyExistsException;
 import pl.pierwszyprogram.library.io.ConsolePrinter;
 import pl.pierwszyprogram.library.io.DataReader;
 import pl.pierwszyprogram.library.io.file.FileManager;
 import pl.pierwszyprogram.library.io.file.FileManagerBuilder;
-import pl.pierwszyprogram.library.model.Book;
-import pl.pierwszyprogram.library.model.Library;
-import pl.pierwszyprogram.library.model.Magazine;
-import pl.pierwszyprogram.library.model.Publication;
+import pl.pierwszyprogram.library.model.*;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
@@ -47,10 +45,25 @@ public class LibraryControl {
                 case PRINT_MAGAZINES -> printMagazine();
                 case DELETE_BOOK -> deleteBook();
                 case DELETE_MAGAZINE -> deleteMagazine();
+                case ADD_USER -> addUser();
+                case PRINT_USERS -> printUsers();
                 case EXIT -> exit();
                 default -> printer.printLine("błędny wybór");
             }
         } while (option != Option.EXIT);
+    }
+
+    private void printUsers() {
+        printer.printUsers(library.getUsers().values());
+    }
+
+    private void addUser() {
+        LibraryUser libraryUser = dataReader.createLibraryUser();
+        try {
+            library.addUser(libraryUser);
+        } catch (UserAlreadyExistsException e) {
+            printer.printLine(e.getMessage());
+        }
     }
 
     private Option getOption() {
@@ -107,13 +120,11 @@ public class LibraryControl {
     }
 
     private void printBooks() {
-        Publication[] publications = library.getPublications();
-        printer.printBooks(publications);
+        printer.printBooks(library.getPublications().values());
     }
 
     private void printMagazine() {
-        Publication[] publications = library.getPublications();
-        printer.printMagazines(publications);
+        printer.printMagazines(library.getPublications().values());
     }
 
     private void addBook() {
@@ -151,8 +162,10 @@ public class LibraryControl {
         PRINT_BOOKS(2, " - wyświetl dostępne książki"),
         ADD_MAGAZINE(3, " - dodanie nowego magazynu"),
         PRINT_MAGAZINES(4, " - wyświetl dostępne magazyny"),
-        DELETE_BOOK(5, "Usuń książkę"),
-        DELETE_MAGAZINE(6, "Usuń magazyn");
+        DELETE_BOOK(5, " - Usuń książkę"),
+        DELETE_MAGAZINE(6, " - Usuń magazyn"),
+        ADD_USER(7, " - Dodaj użytkownika"),
+        PRINT_USERS(8, " - Wyświetl czytelników");
 
         private final int option;
         private final String description;
