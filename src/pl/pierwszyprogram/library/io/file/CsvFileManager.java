@@ -87,27 +87,23 @@ public class CsvFileManager implements FileManager {
 
     private void exportUsers(Library library) {
         Collection<LibraryUser> libraryUsers = library.getUsers().values();
-        try (var bw = new BufferedWriter(new FileWriter(USERS_FILE_NAME))
-        ) {
-            for (LibraryUser libraryUser : libraryUsers) {
-                bw.write(libraryUser.toCsv());
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            throw new DataExportException("Błąd zapisu danych do pliku " + USERS_FILE_NAME);
-        }
+        exportTpoCsv(libraryUsers, USERS_FILE_NAME);
     }
 
     private void exportPublications(Library library) {
         Collection<Publication> publications = library.getPublications().values();
-        try (var bw = new BufferedWriter(new FileWriter(FILE_NAME))
+    exportTpoCsv(publications,FILE_NAME);
+    }
+
+    private <T extends CsvConvertible> void exportTpoCsv(Collection<T> collection, String fileName) {
+        try (var bw = new BufferedWriter(new FileWriter(fileName))
         ) {
-            for (Publication publication : publications) {
-                bw.write(publication.toCsv());
+            for (T elemenet : collection) {
+                bw.write(elemenet.toCsv());
                 bw.newLine();
             }
         } catch (IOException e) {
-            throw new DataExportException("Błąd zapisu danych do pliku " + FILE_NAME);
+            throw new DataExportException("Błąd zapisu danych do pliku " + fileName);
         }
     }
 }
