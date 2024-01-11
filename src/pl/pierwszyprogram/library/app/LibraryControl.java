@@ -9,8 +9,10 @@ import pl.pierwszyprogram.library.io.DataReader;
 import pl.pierwszyprogram.library.io.file.FileManager;
 import pl.pierwszyprogram.library.io.file.FileManagerBuilder;
 import pl.pierwszyprogram.library.model.*;
+import pl.pierwszyprogram.library.model.comperator.AlphabeticalTitleComparator;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.InputMismatchException;
 
 public class LibraryControl {
@@ -54,7 +56,9 @@ public class LibraryControl {
     }
 
     private void printUsers() {
-        printer.printUsers(library.getUsers().values());
+        printer.printUsers(library.getSortedUsers(
+                Comparator.comparing(User::getLastName, String.CASE_INSENSITIVE_ORDER)
+        ));
     }
 
     private void addUser() {
@@ -120,11 +124,15 @@ public class LibraryControl {
     }
 
     private void printBooks() {
-        printer.printBooks(library.getPublications().values());
+        printer.printBooks(library.getSortedPublications(
+                Comparator.comparing(Publication::getTitle, String.CASE_INSENSITIVE_ORDER)
+        ));
     }
 
     private void printMagazine() {
-        printer.printMagazines(library.getPublications().values());
+        printer.printMagazines(library.getSortedPublications((
+                Comparator.comparing(Publication::getTitle, String.CASE_INSENSITIVE_ORDER)
+        )));
     }
 
     private void addBook() {

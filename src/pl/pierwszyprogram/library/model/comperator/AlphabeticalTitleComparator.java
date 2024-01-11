@@ -4,7 +4,7 @@ import pl.pierwszyprogram.library.model.Publication;
 
 import java.util.Comparator;
 
-public class AlphabeticalComparator implements Comparator<Publication> {
+public class AlphabeticalTitleComparator implements Comparator<Publication> {
 
     @Override
     public int compare(Publication o1, Publication o2) {

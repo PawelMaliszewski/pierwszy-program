@@ -23,22 +23,20 @@ public class CsvFileManager implements FileManager {
     }
 
     private void importPublications(Library library) {
-        try (Scanner fileReader = new Scanner(new File(FILE_NAME))
+        try (var br = new BufferedReader(new FileReader(FILE_NAME))
         ) {
-            while (fileReader.hasNextLine()) {
-                String line = fileReader.nextLine();
-                Publication publication = createObjectFromString(line);
-                library.addPublication(publication);
-            }
-
+            br.lines().map(this::createObjectFromString)
+                    .forEach(library::addPublication);
         } catch (FileNotFoundException e) {
             throw new DataImportException("Błąd odczytu pliku " + FILE_NAME);
+        } catch (IOException e) {
+            throw new DataImportException("Błąd pliku:" + FILE_NAME);
         }
     }
 
     private Publication createObjectFromString(String line) {
         String[] split = line.split(";");
-        String type =  split[0];
+        String type = split[0];
         if (Book.TYPE.equals(type)) {
             return createBook(split);
         } else if (Magazine.TYPE.equals(type)) {
@@ -49,24 +47,22 @@ public class CsvFileManager implements FileManager {
     }
 
     private void importUsers(Library library) {
-        try (Scanner fileReader = new Scanner(new File(USERS_FILE_NAME))
+        try (var br = new BufferedReader(new FileReader(USERS_FILE_NAME))
         ) {
-            while (fileReader.hasNextLine()) {
-                String line = fileReader.nextLine();
-                LibraryUser user = createUserFromString(line);
-                library.addUser(user);
-            }
-
+            br.lines().map(this::createUserFromString)
+                    .forEach(library::addUser);
         } catch (FileNotFoundException e) {
-            throw new DataImportException("Błąd odczytu pliku " + USERS_FILE_NAME);
+            throw new DataImportException("Błąd pliku " + USERS_FILE_NAME);
+        } catch (IOException e) {
+            throw new DataImportException("Błąd odczytu piliku: " + USERS_FILE_NAME);
         }
     }
 
     private LibraryUser createUserFromString(String csvLine) {
         String[] split = csvLine.split(";");
-        String fistName =  split[0];
-        String lastName =  split[1];
-        String peselName =  split[2];
+        String fistName = split[0];
+        String lastName = split[1];
+        String peselName = split[2];
         return new LibraryUser(fistName, lastName, peselName);
     }
 
@@ -92,7 +88,7 @@ public class CsvFileManager implements FileManager {
 
     private void exportPublications(Library library) {
         Collection<Publication> publications = library.getPublications().values();
-    exportTpoCsv(publications,FILE_NAME);
+        exportTpoCsv(publications, FILE_NAME);
     }
 
     private <T extends CsvConvertible> void exportTpoCsv(Collection<T> collection, String fileName) {

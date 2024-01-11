@@ -24,6 +24,12 @@ public class Library implements Serializable {
         return users;
     }
 
+    public Collection<LibraryUser> getSortedUsers(Comparator<LibraryUser> comparator) {
+        List<LibraryUser> list = new ArrayList<>(this.users.values());
+        list.sort(comparator);
+        return list;
+    }
+
     public void addPublication(Publication publication) {
         if (publications.containsKey(publication.getTitle())) {
             throw new PublicationAlreadyExistsException("Publikacja o takim tytule juz istnieje");
